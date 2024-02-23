@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Brainfuck JavaScript Interpretator</title>
+</head>
+<body>
+
+<textarea id='program' type="text" placeholder="Enter Brainfuck Code..." cols="100" rows="40" oninput="document.getElementById('program-output').innerText = simplestInterpret(this.value);">>+++++++++[<++++++++>-]<.>+++++++[<++++>-]<+.+++++++..+++.>>>++++++++[<++++>-]
+<.>>>++++++++++[<+++++++++>-]<---.<<<<.+++.------.--------.>>+.</textarea>
+<p id="program-output"></p>
+
+
+
+
+
+<script>
+'use strict';
+function interpret(program) {
+	var i = 0;
+	var arr = new Array(30000).fill(0);
+	var res = '';
+
+	for (let i = 0, l = program.length; i < l; i++) {
+		switch (program[i]) {
+			case '>':
+				i += 1;
+				break;
+
+			case '<':
+				i -= 1;
+				break;
+
+			case '+':
+				arr[i] += 1;
+				break;
+
+			case '-':
+				arr[i] -= 1;
+				break;
+
+			case '.':
+				res += String.fromCharCode(arr[i]);
+				break;
+
+			case ',':
+				arr[i] = prompt('Put a value in a cell [' + i + ']', 0);
+				break;
+
+			case '[':
+				// TODO
+				break;
+
+			case ']':
+				// TODO
+				break;
+		}
+	}
+
+	return res;
+}
+function simplestInterpret(program) {
+	var func = 'var i = 0;';
+	func += 'var arr = new Array(30000).fill(0);';
+	func += 'var res = "";';
+
+	console.log(program);
+	for (let i = 0, l = program.length; i < l; i++) {
+		switch (program[i]) {
+			case '>':
+				func += 'i+=1;';
+				continue;
+
+			case '<':
+				func += 'i-=1;';
+				continue;
+
+			case '+':
+				func += 'arr[i] += 1;';
+				continue;
+
+			case '-':
+				func += 'arr[i] -= 1;';
+				continue;
+
+			case '.':
+				func += 'res += String.fromCharCode(arr[i]);';
+				continue;
+
+			case ',':
+				func += 'arr[i] = prompt("Put a value in a cell [" + i + "]", 0);';
+				continue;
+
+			case '[':
+				func += 'while(arr[i]){';
+				continue;
+
+			case ']':
+				func += '}';
+				continue;
+
+			default:
+				console.log('Invalid char:', program[i]);
+				continue;
+		}
+	}
+	func += 'return res';
+
+	func = new Function(func);
+	console.log(func());
+	return func();
+}
+
+document.getElementById('program-output').innerText = simplestInterpret(document.getElementById('program').value);
+</script>
+</body>
+</html>
